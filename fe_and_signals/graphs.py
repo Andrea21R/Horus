@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from typing import Optional, Tuple
 import pandas as pd
 
-from horus.fe_and_signals.utils import Utils
-from horus.risk.risk_signal import RiskSignal
+from fe_and_signals.utils import Utils
+from risk.risk_signal import RiskSignal
 
 
 class Graphs:
@@ -99,6 +99,7 @@ class Graphs:
             data: pd.DataFrame,
             s_signals: pd.Series,
             spread: bool,
+            tc_perc: Optional[float] = None,
             ax: Optional[plt.Axes] = None,
             show: bool = False
     ) -> plt.Axes:
@@ -107,6 +108,7 @@ class Graphs:
         :param data: pd.DataFrame, with OHLC and spread%
         :param s_signals: pd.Series, with signals {-1, 0, 1}
         :param spread: bool, True to compute net_pnl using spread(%)
+        :param tc_perc: if you want to use a general % spread for all periods
         :param ax: Optional[plt.Axes], specific axes to assign the Graph
         :param show: bool, True to show the graph, False otherwise
         :return: plt.Axes
@@ -114,14 +116,14 @@ class Graphs:
         if not ax:
             fig, ax = plt.subplots()
 
-        s_pnl = RiskSignal.calc_pnl_from_signals(s_signals, data, spread=spread)
+        s_pnl = RiskSignal.get_pnl_from_signals(s_signals, data, spread=spread, tc_perc=tc_perc)
         if spread:
-            s_net_cum_pnl = RiskSignal.calc_cumulative_pnl(s_pnl['net_pnl'], comp=True)
-            s_gross_cum_pnl = RiskSignal.calc_cumulative_pnl(s_pnl['gross_pnl'], comp=True)
+            s_net_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl['net_pnl'], comp=True)
+            s_gross_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl['gross_pnl'], comp=True)
             ax.plot(s_net_cum_pnl, color='red', linewidth=1.5)
             legend = ['Net PNL', 'Gross PNL']
         else:
-            s_gross_cum_pnl = RiskSignal.calc_cumulative_pnl(s_pnl, comp=True)
+            s_gross_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl, comp=True)
             legend = ['Gross PNL']
 
         ax.plot(s_gross_cum_pnl, color='orange', linewidth=1.5)

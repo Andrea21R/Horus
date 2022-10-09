@@ -3,7 +3,7 @@ import numpy as np
 import talib as ta
 
 import aot_module as aot
-from horus.fe_and_signals.utils import Utils
+from fe_and_signals.utils import Utils
 
 
 class FeatureEngineering(object):

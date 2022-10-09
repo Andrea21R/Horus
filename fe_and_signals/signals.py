@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import Tuple, Union
+from typing import Tuple, Union, Optional
 
 from utils import Utils
 from graphs import Graphs
@@ -18,7 +18,8 @@ class Signals:
             s_risk: pd.Series,
             n_std: float,
             show_graph: bool = False,
-            tc_spread: bool = False
+            spread: bool = True,
+            tc_perc: Optional[float] = None
     ) -> Union[pd.Series, pd.DataFrame]:
         """
         Returns signals from RSI indicator
@@ -29,7 +30,8 @@ class Signals:
         :param s_risk: pd.Series
         :param n_std: float
         :param show_graph: bool, True if you want the graph of the trading signal
-        :param tc_spread: bool, True if data contain spread (%), otherwise False
+        :param spread: bool, True if data contain spread (%), otherwise False
+        :param tc_perc: if you want to use a general % spread for all periods
         :return:
         """
         Utils.check_len(data['close'], rsi, s_risk)
@@ -45,7 +47,7 @@ class Signals:
 
         for t in range(len(price)):
 
-            print(f'--------- t: {t}')
+            # print(f'--------- t: {t}')
 
             # --------- CRITIC ZONE
             if not open_trade:
@@ -118,7 +120,7 @@ class Signals:
                 indicator=rsi, open_cv=open_cv, close_cv=close_cv, indicator_name="RSI", ax=axs[1], show=False
             )
             Graphs.pnl_graph(
-                data=data, s_signals=s_signals, spread=tc_spread, ax=axs[2], show=False
+                data=data, s_signals=s_signals, spread=spread, tc_perc=tc_perc, ax=axs[2], show=False
             )
             plt.tight_layout()
             plt.plot()
