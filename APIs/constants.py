@@ -1,0 +1,2 @@
+FXCM_TOKEN = "def6da10d5888b8a911b7be2cc769784ce3915b3"
+FXCM_LOG_LEVEL = "error"
