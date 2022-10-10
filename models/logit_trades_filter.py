@@ -285,7 +285,8 @@ if __name__ == "__main__":
         n_jobs=-1,
         max_iter=300
     )
-    result.to_excel(r"C:\Users\andre\Dropbox\Horus\simulation_results\logit_trades_on_rsi_EURUSD_no_shuffle.xlsx")
+    file_name = "logit_trades_on_rsi_EURUSD_no_shuffle.xlsx"
+    result.to_excel("C:/Users/andre/Dropbox/Horus/simulation_results/" + file_name)
 
     # fe_logit = TendersFeLogit(SQL_ALCHEMY_CONNECTION)
     # fe_logit.fit_logit()
