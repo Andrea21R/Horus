@@ -49,7 +49,7 @@ class Graphs:
             ax.scatter(x=idx, y=s_close.where(open_sign > 0), marker='^', color='green', zorder=10)
             ax.scatter(x=idx, y=s_close.where(open_sign < 0), marker='v', color='red', zorder=10)
             ax.scatter(x=idx, y=s_close.where(close_sign == 1), marker='o', color='black', zorder=10)
-            if s_sl != None:
+            if isinstance(s_sl, pd.Series):
                 ax.plot(s_sl, linestyle='--', color='red', linewidth=1)
             legend.extend(['Long', 'Short', 'Close_trade', 'SL'])
         ax.legend(legend)
@@ -117,15 +117,10 @@ class Graphs:
             fig, ax = plt.subplots()
 
         s_pnl = RiskSignal.get_pnl_from_signals(s_signals, data, spread=spread, tc_perc=tc_perc)
-        if spread:
-            s_net_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl['net_pnl'], comp=True)
-            s_gross_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl['gross_pnl'], comp=True)
-            ax.plot(s_net_cum_pnl, color='red', linewidth=1.5)
-            legend = ['Net PNL', 'Gross PNL']
-        else:
-            s_gross_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl, comp=True)
-            legend = ['Gross PNL']
-
+        s_net_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl['net_pnl'], comp=True)
+        s_gross_cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl['gross_pnl'], comp=True)
+        ax.plot(s_net_cum_pnl, color='red', linewidth=1.5)
+        legend = ['Net PNL', 'Gross PNL']
         ax.plot(s_gross_cum_pnl, color='orange', linewidth=1.5)
         ax.legend(legend)
         ax.grid(linestyle='--', color='silver')
