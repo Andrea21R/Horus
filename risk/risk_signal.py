@@ -1,8 +1,17 @@
 import pandas as pd
 import numpy as np
+import ray
+from itertools import product
 from typing import Union, Optional, List, Tuple
 
 from fe_and_signals.utils import Utils
+from fe_and_signals.fe import FeatureEngineering as Fe
+
+"""
+Da fare & Commenti:
+- Risolvere problema start/end in trade_history. Quando metto diff=0 il numero di starts e ends è diverso
+- MKT_featuers naming: ora le chiamo vola.0, vola.1. Trovare un modo migliore per fare naming
+"""
 
 
 class RiskSignal:
@@ -115,6 +124,7 @@ class RiskSignal:
             cls,
             s_signals: pd.Series,
             data: pd.DataFrame,
+            real_start_end: bool = True,
             spread: bool = True,
             tc_perc: Optional[float] = None,
             checks: bool = True
@@ -132,6 +142,8 @@ class RiskSignal:
             - tc: transaction costs
         :param s_signals: pd.Series, with signals {-1, 0, 1}
         :param data: pd.Series, with OHLC and spread% or bidask prices
+        :param real_start_end: bool, True if you want the real start/end (i.e. signal in t is executed in t+1). False
+                                     otherwise (eg to avoid lookahead bias in get mkt features for feeding a ML model)
         :param spread: bool, True to compute net_pnl using spread(%)
         :param tc_perc: Optional[float], if you want to use a general % spread for all periods
         :param checks: bool, True if you want to run safe checks within the function
@@ -140,7 +152,8 @@ class RiskSignal:
         signals = s_signals.tz_localize(None)
         data_ = data.tz_localize(None)
 
-        starts, ends = cls.__get_start_end_trades(signals.shift(1))
+        shift = 1 if real_start_end else 0
+        starts, ends = cls.__get_start_end_trades(signals.shift(shift))
 
         if checks:
             if spread and tc_perc:
@@ -174,3 +187,34 @@ class RiskSignal:
                 columns=['start', 'end', 'leg', 'duration', 'entry_p', 'exit_p', 'gross_pnl', 'net_pnl']
             )
         return trade_hist
+
+    @classmethod
+    def get_mkt_features_by_trades(
+            cls,
+            trades_start_dates: list,
+            data: pd.DataFrame,
+            fe_pars: dict,
+    ) -> pd.DataFrame:
+
+        mkt_fe = {}
+        for func_name, func in fe_pars.items():
+            pars_combo = product(*list(func['args'].values()))
+            func_pars_k = func['args'].keys()
+            pars_combo = [
+                {
+                    k: combo[idx]
+                    for k, idx in zip(func_pars_k, range(len(func_pars_k)))
+                }
+                for combo in pars_combo
+            ]
+            print(func_name)
+
+            for idx, combo in enumerate(pars_combo):
+                tgt_data = data[func['data_cols']] if len(func['data_cols']) > 1 else data[func['data_cols'][0]]
+                mkt_fe[f"{func_name}.{idx}"] = func['func'](tgt_data, **combo)
+
+        mkt_fe = pd.DataFrame(mkt_fe, index=data.index)
+        # NOT EFFICIENT. FIND NEW WAY TO DO IT
+        mkt_fe = pd.concat([mkt_fe.loc[start] for start in trades_start_dates], axis=1).transpose()
+
+        return mkt_fe
