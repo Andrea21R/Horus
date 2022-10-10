@@ -195,7 +195,10 @@ class RiskSignal:
             data: pd.DataFrame,
             fe_pars: dict,
     ) -> pd.DataFrame:
-
+        """
+        Returns market features, according to the start_date from a list of trades.
+        Think if it would be better to move it into an autofe.py file
+        """
         mkt_fe = {}
         for func_name, func in fe_pars.items():
             pars_combo = product(*list(func['args'].values()))
