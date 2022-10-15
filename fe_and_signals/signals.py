@@ -126,3 +126,130 @@ class Signals:
             plt.plot()
 
         return s_signals
+
+    @staticmethod
+    def from_bans(
+            data: pd.DataFrame,
+            uband: pd.Series,
+            mband: pd.Series,
+            lband: pd.Series,
+            middle_exit: bool,
+            s_risk: pd.Series,
+            n_std: float,
+            fix_talib_bug: bool,
+            max_attempts: Optional[int] = None,
+            show_graph: bool = False,
+            spread: bool = True,
+            tc_perc: Optional[float] = None
+    ) -> pd.Series:
+
+        close, uband, mband, lband = Utils.from_series_to_numpy(data.close, uband, mband, lband)
+        Utils.check_len(close, uband, mband, lband)
+
+        signals = np.repeat(0, len(close))
+        s_sl = np.repeat(np.nan, len(close))
+
+        signal = 0
+        tmp_sl = np.nan
+        open_trade = False
+        lose_trades = []
+        pause = False
+
+        for t in range(len(close)):
+
+            if fix_talib_bug:
+                stop_for_bug = True if uband[t] == mband[t] else False
+            else:
+                stop_for_bug = False
+
+            if not stop_for_bug:
+                # ---- PAUSE EVALUATION
+                if pause:
+                    # given p0=close[t-1], p1=close[t], m=mband[t]
+                    # if (p0-m>0 & p1-m<0) or (p0-m<0 & p1-m>0) it means that price crossed the middle-band
+                    if (np.sign(close[t - 1] - mband[t]) + np.sign(close[t] - mband[t])) == 0:
+                        pause = False
+                        lose_trades = []
+
+                # --- SL & TP
+                if open_trade:
+                    # ---- STOP LOSS
+                    if (signal == 1) and (close[t] < tmp_sl):
+                        lose_trades.append(signal)
+                        signal = 0
+                        open_trade = False
+                        continue
+                    elif (signal == -1) and (close[t] > tmp_sl):
+                        lose_trades.append(signal)
+                        signal = 0
+                        open_trade = False
+                        continue
+                    # ---- TAKE PROFIT
+                    if middle_exit:
+                        if (signal == 1) and (close[t] > mband[t]):
+                            lose_trades = []
+                            signal = 0
+                            open_trade = False
+                            continue
+                        elif (signal == -1) and (close[t] < mband[t]):
+                            lose_trades = []
+                            signal = 0
+                            open_trade = False
+                            continue
+                    else:
+                        if (signal == 1) and (close[t] > uband[t]):
+                            lose_trades = []
+                            signal = 0
+                            open_trade = False
+                        elif (signal == -1) and (close[t] < lband[t]):
+                            lose_trades = []
+                            signal = 0
+                            open_trade = False
+
+                # ----- OPEN TRADE
+                if not open_trade:
+
+                    if max_attempts and (not pause):
+                        if abs(sum(lose_trades[-max_attempts:])) == max_attempts:
+                            pause = True
+
+                    if not pause:
+                        if close[t] < lband[t]:
+                            signal = 1
+                            tmp_sl = close[t] - n_std * s_risk[t]
+                            open_trade = True
+                        elif close[t] > uband[t]:
+                            signal = -1
+                            tmp_sl = close[t] + n_std * s_risk[t]
+                            open_trade = True
+
+                signals[t] = signal
+                s_sl[t] = tmp_sl
+
+        signals = pd.Series(signals, index=data.index)
+        s_sl = pd.Series(s_sl, index=data.index).ffill()
+
+        if show_graph:
+
+            fig, axs = plt.subplots(nrows=2)
+            fig.suptitle(f"TRADING SYSTEM | BANDS | mid_exit={middle_exit}; n_std_risk={n_std}")
+
+            Graphs.buy_sell_on_price(
+                s_signals=signals,
+                continuous_signals=False,
+                s_close=data.close,
+                s_sl=s_sl,
+                ax=axs[0],
+                large_data_constraint=False
+            )
+            uband, mband, lband = pd.Series(uband, index=data.index, name='uband'), \
+                                  pd.Series(mband, index=data.index, name='mband'), \
+                                  pd.Series(lband, index=data.index, name='lband')
+            axs[0].plot(pd.concat([uband, mband, lband], axis=1))
+
+            Graphs.pnl_graph(data=data, s_signals=signals, spread=spread, tc_perc=tc_perc, ax=axs[1])
+
+            plt.tight_layout()
+            plt.plot()
+
+        return signals
