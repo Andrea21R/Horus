@@ -26,6 +26,12 @@ def get_mkt_features_by_trades(trades_start_dates: list, data: pd.DataFrame, fe_
 
     mkt_fe = pd.DataFrame(mkt_fe, index=data.index)
     # NOT EFFICIENT. FIND NEW WAY TO DO IT
-    mkt_fe = pd.concat([mkt_fe.loc[start] for start in trades_start_dates], axis=1).transpose()
+    mkt_fe = pd.concat(
+        [
+            mkt_fe.iloc[start - 1]  # -1 because signal[t] is a trade in t+1, but mkt_fe are available in t-1
+            for start in mkt_fe.index.get_loc(trades_start_dates)
+        ],
+        axis=1
+    ).transpose()
 
     return mkt_fe

@@ -5,7 +5,7 @@ from itertools import product
 from typing import Union, Optional, List, Tuple
 
 from fe_and_signals.utils import Utils
-from fe_and_signals.fe import FeatureEngineering as Fe
+from fe_and_signals.fe import Fe as Fe
 
 """
 Da fare & Commenti:
@@ -124,7 +124,6 @@ class RiskSignal:
             cls,
             s_signals: pd.Series,
             data: pd.DataFrame,
-            real_start_end: bool = True,
             spread: bool = True,
             tc_perc: Optional[float] = None,
             checks: bool = True
@@ -152,8 +151,7 @@ class RiskSignal:
         signals = s_signals.tz_localize(None)
         data_ = data.tz_localize(None)
 
-        shift = 1 if real_start_end else 0
-        starts, ends = cls.__get_start_end_trades(signals.shift(shift))
+        starts, ends = cls.__get_start_end_trades(signals.shift(1))
 
         if checks:
             if spread and tc_perc:

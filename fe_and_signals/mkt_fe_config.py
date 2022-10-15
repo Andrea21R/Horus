@@ -1,4 +1,4 @@
-from fe_and_signals.fe import FeatureEngineering as Fe
+from fe_and_signals.fe import Fe as Fe
 
 fe_pars = {
     'vola': {
