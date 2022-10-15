@@ -21,8 +21,9 @@ RISKS:
 
 MODELS:
     - terminare revisione di Logit
-    - accuracy, etc. li porto fuori da Logit? magari in un .py comune anche per i futuri modelli? magari si ma aspetto
-      di sviluppare prima gli altri modelli
+        . accuracy, etc. li porto fuori da Logit? magari in un .py comune anche per i futuri modelli? magari si ma aspetto
+          di sviluppare prima gli altri modelli
+    - OLS (Supervised ML)
 
 BACKTESTER:
     - creare dei .py in cui dati dei segnali (considerati esogeni) si fa tutta una valutazione di performance, lasciando
