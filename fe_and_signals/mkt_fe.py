@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 from itertools import product
 
@@ -28,10 +30,32 @@ def get_mkt_features_by_trades(trades_start_dates: list, data: pd.DataFrame, fe_
     # NOT EFFICIENT. FIND NEW WAY TO DO IT
     mkt_fe = pd.concat(
         [
-            mkt_fe.iloc[start - 1]  # -1 because signal[t] is a trade in t+1, but mkt_fe are available in t-1
-            for start in mkt_fe.index.get_loc(trades_start_dates)
+            mkt_fe.iloc[mkt_fe.index.get_loc(start) - 1]  # -1 because signal[t] is a trade in t+1, but mkt_fe are available in t-1
+            for start in trades_start_dates
         ],
         axis=1
     ).transpose()
 
     return mkt_fe
+
+
+if __name__ == "__main__":
+
+    import datetime as dt
+    from fe_and_signals.mkt_fe_config import fe_pars
+
+    files_path =  os.path.dirname(os.getcwd()) + "/test_data/"
+    trade_hist_file_name = "bb_trades_history_EURUSD.pkl"
+    trade_hist = pd.read_pickle(files_path + trade_hist_file_name)
+    data_file_name = "EURUSD2022.parquet"
+    data = pd.read_parquet(files_path + data_file_name)
+
+    mkt_fe = get_mkt_features_by_trades(
+        trades_start_dates=trade_hist['start'],
+        data=data,
+        fe_pars=fe_pars
+    )
+
+    date_str = str(dt.datetime.now())[:16].replace(":", "").replace("-", "").replace(" ", "_")
+    output_file_name = "mkt_fe_EURUSD_BB.parquet"
+    mkt_fe.to_parquet(files_path + output_file_name)
