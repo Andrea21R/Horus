@@ -1,0 +1,34 @@
+FEATURES:
+    - extreme event (std events) dummy
+    - studiare tutte le varie features di talib
+    - di+, di-, adx (mi sa che lo fa talib)
+    - creare un autofe per generare dei settings pre-stabiliti di features (paralleling)?
+    - speed-test? poco importante
+    - fibonacci moving average
+    - pivots points
+    - supertrend
+
+    - FS (Features Selection), è tutto una branca di studio, farla bene a tempo debito
+
+SIGNALS:
+    - trend-following
+    - breakouts
+    - di+, di-, adx
+    - mixer
+
+RISKS:
+    - trades performance evaluation (gain/loss, accuracy, etc.)
+
+MODELS:
+    - terminare revisione di Logit
+    - accuracy, etc. li porto fuori da Logit? magari in un .py comune anche per i futuri modelli? magari si ma aspetto
+      di sviluppare prima gli altri modelli
+
+BACKTESTER:
+    - creare dei .py in cui dati dei segnali (considerati esogeni) si fa tutta una valutazione di performance, lasciando
+      facoltativa o meno l'applicazione di modelli? tipo logit. etc. Da ragionarci, non è facile
+
+TESTS:
+    - testare segnali (usare use cases in excel):
+        . RSI
+        . BANDS
