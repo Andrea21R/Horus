@@ -1,0 +1,49 @@
+rsi['SMA_RSI_8'] = Fe.sma(rsi.RSI_14, 15)
+rsi['SMA_RSI_15'] = Fe.sma(rsi.RSI_14, 15)
+
+
+def get_signals(rsi: pd.Series, kama1: pd.Series, kama2: pd.Series):
+    return (kama1 > kama2).replace((True, False), (1, -1))
+
+
+def get_pnl_from_signals(close: pd.Series, signals: pd.Series):
+    return signals.shift(1).mul(close.pct_change())
+
+
+def get_cum_pnl(pnl: pd.Series):
+    return (1 + pnl).cumprod() - 1
+
+
+signals = get_signals(rsi.RSI_14, rsi.SMA_RSI_8, rsi.SMA_RSI_15)
+pnl = get_pnl_from_signals(data.close, signals)
+
+rsi_signals = Signals.from_rsi(data, rsi.RSI_14, [70, 30], [50, 50], s_risk, 2, False, True, None)
+
+rsi_pnl = get_pnl_from_signals(data.close, rsi_signals)
+
+start = -len(rsi)
+
+rsi_tmp = rsi.iloc[start:]
+data_tmp = data.iloc[start:]
+tmp_pnl = pnl.iloc[start:]
+tmp_rsi_pnl = rsi_pnl.iloc[start:]
+
+fig, axs = plt.subplots(nrows=4)
+axs[0].plot(data_tmp.close, color='aquamarine', linewidth=1)
+axs[0].grid()
+
+axs[1].grid(linewidth=0.5, zorder=1)
+axs[1].plot(rsi_tmp.RSI_14, linewidth=1, color='mediumpurple', zorder=5)
+axs[1].axhline(30, color='limegreen', linewidth=1, linestyle='--', zorder=2)
+axs[1].axhline(50, color='limegreen', linewidth=1, linestyle='--', zorder=2)
+axs[1].axhline(70, color='limegreen', linewidth=1, linestyle='--', zorder=2)
+axs[1].plot(rsi_tmp.SMA_RSI_8, linewidth=1, color='darkred', zorder=6)
+axs[1].plot(rsi_tmp.SMA_RSI_15, linewidth=1, color='orange', zorder=6)
+axs[2].plot(get_cum_pnl(tmp_pnl), color='orange')
+axs[2].grid()
+axs[2].set_ylabel('Cross-MA on RSI', color='white', fontweight='bold')
+axs[3].plot(get_cum_pnl(tmp_rsi_pnl), color='cyan')
+axs[3].set_ylabel('RSI strategy', color='white', fontweight='bold')
+axs[3].grid()
+plt.tight_layout()
+plt.plot()

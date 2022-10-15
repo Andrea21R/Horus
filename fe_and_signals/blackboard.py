@@ -35,13 +35,13 @@ signals = Signals.from_rsi(
     tc_perc=None, #0.002
 )
 
-trade_history = RiskSignal.get_trade_history(s_signals=signals, data=data, spread=True, real_start_end=False)  #, tc_perc=0.002)
-
-mkt_fe = RiskSignal.get_mkt_features_by_trades(
-    trades_start_dates=trade_history['start'].to_list(),
-    data=data,
-    fe_pars=fe_pars,
-)
-mkt_fe.to_parquet(r"C:\Users\andre\Dropbox\Horus\test_data\mkt_fe_for_logit_EURUSD.parquet")
-trade_history.to_pickle(r"C:\Users\andre\Dropbox\Horus\test_data\rsi_trades_history_EURUSD.pkl")
-
+# trade_history = RiskSignal.get_trade_history(s_signals=signals, data=data, spread=True, real_start_end=False)  #, tc_perc=0.002)
+#
+# mkt_fe = RiskSignal.get_mkt_features_by_trades(
+#     trades_start_dates=trade_history['start'].to_list(),
+#     data=data,
+#     fe_pars=fe_pars,
+# )
+# mkt_fe.to_parquet(r"C:\Users\andre\Dropbox\Horus\test_data\mkt_fe_for_logit_EURUSD.parquet")
+# trade_history.to_pickle(r"C:\Users\andre\Dropbox\Horus\test_data\rsi_trades_history_EURUSD.pkl")
+#

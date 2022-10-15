@@ -81,7 +81,7 @@ class Signals:
             # --------- CLOSE TRADE
             if open_trade:
 
-                if ((signals[t -1] == -1) and (rsi[t] < close_cv[0])) or ((signals[t -1] == 1) and (rsi[t] > close_cv[1])):
+                if ((signals[t -1] == -1) and (rsi[t] <= close_cv[0])) or ((signals[t -1] == 1) and (rsi[t] >= close_cv[1])):
                     # print(f'Close Short for TP (RSI: {rsi}; P: {price[t]})')
                     signal = 0
                     open_trade = False
