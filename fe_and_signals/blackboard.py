@@ -3,11 +3,9 @@ import pandas as pd
 import yfinance as yf
 
 from fe import FeatureEngineering
-from risk.risk_signal import RiskSignal
+from mkt_fe import get_mkt_features_by_trades
 from signals import Signals
-from models.logit_trades_filter import LogitTrades
 from utils import Utils
-from risk.mkt_fe_config import fe_pars
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -37,7 +35,7 @@ signals = Signals.from_rsi(
 
 # trade_history = RiskSignal.get_trade_history(s_signals=signals, data=data, spread=True, real_start_end=False)  #, tc_perc=0.002)
 #
-# mkt_fe = RiskSignal.get_mkt_features_by_trades(
+# mkt_fe = get_mkt_features_by_trades(
 #     trades_start_dates=trade_history['start'].to_list(),
 #     data=data,
 #     fe_pars=fe_pars,

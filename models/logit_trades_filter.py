@@ -228,21 +228,6 @@ def align_trades_pnl_and_mkt_fe(trades_pnl: pd.DataFrame, mkt_fe: pd.DataFrame) 
 
     return (mkt_fe_, trades_pnl.loc[idx_mask])
 
-# ----------------------------------------------------------------------------------------------------------------------
-# def print_pnl_stats(pnl: pd.Series) -> NoReturn:
-#     print(f"Avg-PNL > 0: {round(pnl.loc[pos_idx].mean() / 1000)}k")
-#     print(f"Avg-PNL < 0: {round(pnl.loc[neg_idx].mean() / 1000)}k")
-#     print(' ')
-#     print(f"GAIN-LOSS ratio: {abs(round(pnl.loc[pos_idx].mean() / pnl.loc[neg_idx].mean(), 2))}")
-#     print(' ')
-#     print(f'Mean: {round(pnl.mean() / 1000, 2)}k')
-#     print(f'Vola: {round(pnl.std() / 1000, 2)}k')
-#     print(f"Trade-Sharpe: {round(pnl.mean() / pnl.std(), 2)}")
-#     print(' ')
-#     print(f'Max: {round(pnl.max() / 1000, 2)}k')
-#     print(f'Min: {round(pnl.min() / 1000, 2)}k')
-#     print(' ')
-
 
 if __name__ == "__main__":
 
@@ -287,43 +272,3 @@ if __name__ == "__main__":
     )
     file_name = "logit_trades_on_rsi_EURUSD_no_shuffle.xlsx"
     result.to_excel("C:/Users/andre/Dropbox/Horus/simulation_results/" + file_name)
-
-    # fe_logit = TendersFeLogit(SQL_ALCHEMY_CONNECTION)
-    # fe_logit.fit_logit()
-    #
-    #
-    # X_test = fe_logit.X_train.drop('const', axis=1)
-    # Y_test = fe_logit.Y_train
-    # threshold = 0.4
-    #
-    # # ----------------------------------------------------------------------------------------------------------------
-    # pnl, fe = fe_logit.get_tenders_fe()
-    # pos_idx = fe.where(fe['pnl_dummy'] == 1).dropna().index
-    # neg_idx = fe.where(fe['pnl_dummy'] == 0).dropna().index
-    # # ----------------------------------------------------------------------------------------------------------------
-    # print('============================== LOGIT-STATISTICS =========================================================')
-    # print(f'THRESHOLD: {threshold}')
-    # print('============================== LOGIT-STATISTICS ===========================================================')
-    # print(' ')
-    # print(f"Accuracy-Ratio: {fe_logit.get_accuracy_score(Y_test, X_test, threshold)}")
-    # print(' ')
-    # print(f"AUROC: {fe_logit.get_auroc_score(Y_test, X_test, threshold)}")
-    # print(' ')
-    # print('--- CONFUSION MATRIX')
-    # print(fe_logit.get_confusion_matrix(Y_test, X_test, threshold))
-    # # ------------------------------------------------------------------------------------------------------------------
-    # print('============================== LOGIT-EFFICIENCY ===========================================================')
-    # print(' ')
-    # print(' ----- TENDERS-ALGO STATISTICS (pre Logit)')
-    # print_pnl_stats(pnl)
-    # # ------------------------------------------------------------------------------------------------------------------
-    # y_pred = fe_logit.get_prediction(X_test, False)
-    # mask = y_pred.mask(y_pred > threshold, 1).mask(y_pred <= threshold, 0)
-    # pnl_masked_by_logit = pnl.mul(mask)
-    # # ------------------------------------------------------------------------------------------------------------------
-    # print('========================= TENDERS-ALGO STATISTICS (post Logit) ============================================')
-    # print(' ')
-    # print_pnl_stats(pnl_masked_by_logit)
-    # print('===========================================================================================================')
-
-
