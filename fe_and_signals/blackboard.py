@@ -23,19 +23,19 @@ data = data.loc[rsi.index]
 
 bb = Fe.Overlap.bollinger(data.close, 60*24*5, 2, 2)
 
-# signals = Signals.from_bans(
-#     data=data,
-#     uband=bb['uband'],
-#     mband=bb['mband'],
-#     lband=bb['lband'],
-#     middle_exit=True,
-#     s_risk=s_risk,
-#     n_std=2,
-#     max_attempts=2,
-#     fix_talib_bug=True,
-#     show_graph=True,
-#     spread=True
-# )
+signals = Signals.from_bans(
+    data=data,
+    uband=bb['uband'],
+    mband=bb['mband'],
+    lband=bb['lband'],
+    middle_exit=True,
+    s_risk=s_risk,
+    n_std=2,
+    max_attempts=2,
+    fix_talib_bug=True,
+    show_graph=True,
+    spread=True
+)
 # s_pnl = RiskSignal.get_pnl_from_signals(signals, data, spread=True)
 # cum_pnl = RiskSignal.get_cumulative_pnl(s_pnl['net_pnl'], comp=True)
 # trade_hist = RiskSignal.get_trade_history(signals, data)

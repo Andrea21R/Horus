@@ -177,7 +177,7 @@ class Fe(object):
             if timeperiod == 1:
                 return bars_dispersion
             else:
-                return cls.sma(bars_dispersion, timeperiod=timeperiod)
+                return Fe.Overlap.sma(bars_dispersion, timeperiod=timeperiod)
 
         @staticmethod
         def hurst_exp(s_price: pd.DataFrame, timeperiod: int) -> pd.Series:
@@ -208,8 +208,8 @@ class Fe(object):
             """
             return ta.MACD(s, fastperiod, slowperiod, signalperiod)
 
-        @classmethod
-        def cross_sma_perc_distance(cls, s_price: pd.Series, lookback: Tuple[int, int]) -> float:
+        @staticmethod
+        def cross_sma_perc_distance(s_price: pd.Series, lookback: Tuple[int, int]) -> float:
             """
             Returns the percentage distance between a shorter SMA and a longest one, computed on the closing prices.
             ----------------------------------------------------------------------------------------------------------------
@@ -224,8 +224,8 @@ class Fe(object):
             :param lookback, Tuple[int, int], windows for SMA. First elements will be assigned to the shorter SMA
             """
             Utils.check_min_obs(s_price, min_len=lookback[1])
-            short_ma = cls.sma(s_price, timeperiod=lookback[0])
-            long_ma  = cls.sma(s_price,timeperiod=lookback[1])
+            short_ma = Fe.Overlap.sma(s_price, timeperiod=lookback[0])
+            long_ma  = Fe.Overlap.sma(s_price,timeperiod=lookback[1])
             return short_ma / long_ma - 1
 
         @staticmethod

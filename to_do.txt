@@ -10,6 +10,11 @@ FEATURES:
 
     - FS (Features Selection), è tutto una branca di studio, farla bene a tempo debito
 
+MKT_FE:
+    - sistemare parte di trades_start_dates. Deve essere un parametro opzionale, se c'è allora li allinea con i trades,
+      altrimenti calcola le features di mercato in continuo (potrebbe servire per RL)
+    - completare mkt_config
+
 SIGNALS:
     - trend-following
     - breakouts
