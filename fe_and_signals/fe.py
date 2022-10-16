@@ -4,7 +4,7 @@ import talib as ta
 import hurst
 from typing import Tuple, Union, Optional
 
-import aot_module as aot
+from fe_and_signals import aot_module as aot
 from fe_and_signals.utils import Utils
 
 """
