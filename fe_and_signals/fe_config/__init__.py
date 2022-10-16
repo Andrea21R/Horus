@@ -1,0 +1,1 @@
+from fe_and_signals.fe_config.logit_for_trades import fe_pars as fe_config_for_trades_logit
