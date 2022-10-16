@@ -3,7 +3,7 @@ import pandas as pd
 import yfinance as yf
 
 from fe import Fe as Fe
-from mkt_fe import get_mkt_features_by_trades
+from fe_generator import get_fe_by_config
 from signals import Signals
 from utils import Utils
 from risk.risk_signal import RiskSignal
