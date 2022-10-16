@@ -3,11 +3,47 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import Tuple, Union, Optional
 
-from utils import Utils
-from graphs import Graphs
+from fe_and_signals.utils import Utils
+from fe_and_signals.graphs import Graphs
 
 
 class Signals:
+
+    @staticmethod
+    def from_overlapped_filter(
+            data: pd.DataFrame,
+            s_overlap: pd.Series,
+            show_graph: bool = False,
+            spread: bool = True,
+            tc_perc: Optional[float] = None
+    ) -> pd.Series:
+
+        close = data['close']
+        s_signals = close.mask(close >= s_overlap, 1).mask(close < s_overlap, -1)
+
+        if show_graph:
+            fig, axs = plt.subplots(nrows=2)
+            fig.suptitle("TRADING SYSTEM | OVERLAPPED FILTER")
+            Graphs.buy_sell_on_price(
+                s_signals=s_signals,
+                continuous_signals=True,
+                s_close=close,
+                ax=axs[0],
+                large_data_constraint=True
+            )
+            axs[0].plot(s_overlap)
+            Graphs.pnl_graph(
+                data=data,
+                s_signals=s_signals,
+                spread=spread,
+                tc_perc=tc_perc,
+                ax=axs[1]
+            )
+            plt.tight_layout()
+            plt.show()
+
+        return s_signals
+
 
     @staticmethod
     def from_rsi(
@@ -128,7 +164,7 @@ class Signals:
         return s_signals
 
     @staticmethod
-    def from_bans(
+    def from_bands(
             data: pd.DataFrame,
             uband: pd.Series,
             mband: pd.Series,
