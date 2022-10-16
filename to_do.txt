@@ -18,7 +18,7 @@ MKT_FE:
 SIGNALS:
     DONE... trend-following
     - breakouts
-    - di+, di-, adx
+    DONE... di+, di-, adx
     - mixer
 
 RISKS:

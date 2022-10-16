@@ -46,6 +46,57 @@ class Signals:
 
 
     @staticmethod
+    def from_cross_filters(
+            s_filter1: pd.Series,
+            s_filter2: pd.Series,
+            s_control: Optional[pd.Series] = None,
+            control_threshold: Optional[float] = None,
+            show_graph: bool = False,
+            data: Optional[pd.DataFrame] = None,
+            spread: bool = True,
+            tc_perc: Optional[float] = None
+    ):
+        if isinstance(s_control, pd.Series) and (not control_threshold):
+            raise Exception("If you pass s_control series, you also have to pass a  control threshold")
+
+        s_signals = s_filter1.\
+            mask(s_filter1 >= s_filter2, 1).\
+            mask(s_filter2 > s_filter1, -1)
+        if control_threshold:
+            s_signals = s_signals.mask(s_control < control_threshold, 0)
+
+        if show_graph:
+            fig, axs = plt.subplots(nrows=3)
+            fig.suptitle(f"TRADING SYSTEM | CROSS-FILTER {'with control' if control_threshold else ''}")
+            Graphs.buy_sell_on_price(
+                s_signals=s_signals,
+                continuous_signals=False if control_threshold else True,
+                s_close=data.close,
+                ax=axs[0],
+                large_data_constraint=True
+            )
+            axs[1].plot(s_filter1, color='green')
+            axs[1].plot(s_filter2, color='red')
+            legend = ['filter1', 'filter2']
+            if control_threshold:
+                axs[1].plot(s_control, color='orange')
+                axs[1].axhline(control_threshold)
+                legend.extend(['control-filter', 'control-threshold'])
+            axs[1].legend(legend)
+            axs[1].grid(linestyle='--', color='silver')
+            axs[1].set_ylabel('FILTERS', fontweight='bold')
+
+            Graphs.pnl_graph(
+                data=data,
+                s_signals=s_signals,
+                spread=spread,
+                tc_perc=tc_perc,
+                ax=axs[2]
+            )
+
+        return s_signals
+
+    @staticmethod
     def from_rsi(
             data: pd.DataFrame,
             rsi: pd.Series,
