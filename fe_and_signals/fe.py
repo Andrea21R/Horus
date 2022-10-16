@@ -130,14 +130,14 @@ class Fe(object):
             else:
                 s_arr = Utils.from_series_to_numpy(s)
 
-            ema = np.repeat(np.nan, repeats=s_arr)
+            ema = np.repeat(np.nan, repeats=len(s_arr))
 
             for t in range(timeperiod, len(s_arr) + 1):
 
-                tgt = s_arr[t - timeperiod: timeperiod]
+                tgt = s_arr[t - timeperiod: t]
                 tmp_ema = ta.EMA(tgt, timeperiod)
 
-                ema[timeperiod - 1] = tmp_ema[-1]
+                ema[t - 1] = tmp_ema[-1]
 
             return pd.Series(s_arr, index=s.index)
 
@@ -248,6 +248,26 @@ class Fe(object):
             :return: pd.Series
             """
             return ta.ADX(data.high, data.low, data.close, timeperiod)
+
+        @staticmethod
+        def plus_di(data: pd.DataFrame, timeperiod: int) -> pd.Series:
+            """
+            Return the +DI
+            :param data: pd.dataFrame, with at least columns ['high', 'low', 'close']
+            :param timeperiod: int
+            :return: pd.Series
+            """
+            return ta.PLUS_DI(data.high, data.low, data.close, timeperiod=timeperiod)
+
+        @staticmethod
+        def minus_di(data: pd.DataFrame, timeperiod: int) -> pd.Series:
+            """
+            Return the -DI
+            :param data: pd.dataFrame, with at least columns ['high', 'low', 'close']
+            :param timeperiod: int
+            :return: pd.Series
+            """
+            return ta.MINUS_DI(data.high, data.low, data.close, timeperiod=timeperiod)
 
     class Others:
 
