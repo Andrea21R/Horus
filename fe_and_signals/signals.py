@@ -20,7 +20,7 @@ class Signals:
             show_graph: bool = False,
             spread: bool = True,
             tc_perc: Optional[float] = None
-    ) -> Union[pd.Series, pd.DataFrame]:
+    ) -> pd.Series:
         """
         Returns signals from RSI indicator
         :param data: pd.DataFrame, with OHLC and spread(%) (or bidask). spread to True to use spread(%)
@@ -32,7 +32,7 @@ class Signals:
         :param show_graph: bool, True if you want the graph of the trading signal
         :param spread: bool, True if data contain spread (%), otherwise False
         :param tc_perc: if you want to use a general % spread for all periods
-        :return:
+        :return: pd.Series
         """
         Utils.check_len(data['close'], rsi, s_risk)
 
@@ -142,7 +142,23 @@ class Signals:
             spread: bool = True,
             tc_perc: Optional[float] = None
     ) -> pd.Series:
-
+        """
+        Return signals {1: long, 0: neutral, -1: short} from bands indicators (bollinger, ...).
+        :param data: pd.DataFrame, with at least the column 'close',
+        :param uband: pd.Series, upper-band
+        :param mband: pd.Series, middle-band
+        :param lband: pd.Series, lower-band
+        :param middle_exit: bool, True if you want to set a Take-Profit when price crosses the mband
+        :param s_risk: pd.Series, volatility series (atr, vola_sma, vola_ema, etc.)
+        :param n_std: float, number of std for SL. It will be used with s_risk
+        :param fix_talib_bug: bool, if you use Bollinger, talib has a bug. Sometimes uband=mband=lband. If
+                              this par is settled to True, when this bug occurs, function will return no signal
+        :param max_attempts: Optional[int], number of max SL touchable from one leg.
+        :param show_graph: bool, True for showing a trading graph
+        :param spread: bool, True if data contain spread (%), otherwise False
+        :param tc_perc: if you want to use a general % spread for all periods
+        :return: pd.Series
+        """
         close, uband, mband, lband = Utils.from_series_to_numpy(data.close, uband, mband, lband)
         Utils.check_len(close, uband, mband, lband)
 
