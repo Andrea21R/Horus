@@ -1,8 +1,8 @@
 FEATURES:
     - extreme event (std events) dummy
     - studiare tutte le varie features di talib
-    - di+, di-, adx (mi sa che lo fa talib)
-    - creare un autofe per generare dei settings pre-stabiliti di features (paralleling)?
+    DONE... di+, di-, adx (mi sa che lo fa talib)
+    DONE... creare un autofe per generare dei settings pre-stabiliti di features (paralleling)?
     - speed-test? poco importante
     - fibonacci moving average
     - pivots points
@@ -11,12 +11,12 @@ FEATURES:
     - FS (Features Selection), è tutto una branca di studio, farla bene a tempo debito
 
 MKT_FE:
-    - sistemare parte di trades_start_dates. Deve essere un parametro opzionale, se c'è allora li allinea con i trades,
+    DONE... sistemare parte di trades_start_dates. Deve essere un parametro opzionale, se c'è allora li allinea con i trades,
       altrimenti calcola le features di mercato in continuo (potrebbe servire per RL)
-    - completare mkt_config
+    DONE... completare mkt_config
 
 SIGNALS:
-    - trend-following
+    DONE... trend-following
     - breakouts
     - di+, di-, adx
     - mixer
@@ -38,3 +38,8 @@ TESTS:
     - testare segnali (usare use cases in excel):
         . RSI
         . BANDS
+BUGS:
+    - ZeroDivisionError in kama
+
+CODE:
+    - signals in aot
