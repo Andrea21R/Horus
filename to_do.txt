@@ -29,6 +29,8 @@ MODELS:
         . accuracy, etc. li porto fuori da Logit? magari in un .py comune anche per i futuri modelli? magari si ma aspetto
           di sviluppare prima gli altri modelli
     - OLS (Supervised ML)
+    - Hidden mkt model (video youtube mandato da Marco). Regressione cross-sectional per trovare le parametrizzazioni
+      degli indicatori in base a delle regressioni. Riesumare appunti e video
 
 BACKTESTER:
     - creare dei .py in cui dati dei segnali (considerati esogeni) si fa tutta una valutazione di performance, lasciando
@@ -40,6 +42,9 @@ TESTS:
         . BANDS
 BUGS:
     - ZeroDivisionError in kama
+    - initial value in KAMA (for convergence)
 
 CODE:
     - signals in aot
+    - rifare Talib
+    - fare Docs con Sphinx
