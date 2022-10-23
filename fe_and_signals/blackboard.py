@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import yfinance as yf
 
-from fe import Fe as Fe
+from features import Features as Fe
 from fe_generator import FeGenerator
 from signals import Signals
 from utils import Utils
@@ -15,13 +15,13 @@ data = yf.Ticker("BTC-USD").history('300d', interval='1h')[['Open', 'High', 'Low
 data.columns = ['open', 'high', 'low', 'close']
 data = pd.read_parquet(os.path.dirname(os.getcwd()) + "/test_data/EURUSD2022.parquet")
 
-rsi = Fe.Overlap.rsi(data['close'], timeperiod=14)
-s_risk = Fe.Vola.vola_sma(data['close'], timeperiod=120, on_rets=False)
+rsi = Features.Overlap.rsi(data['close'], timeperiod=14)
+s_risk = Features.Vola.vola_sma(data['close'], timeperiod=120, on_rets=False)
 
 rsi, s_risk = Utils.align_series(rsi, s_risk)
 data = data.loc[rsi.index]
 
-bb = Fe.Overlap.bollinger(data.close, 60*24*5, 2, 2)
+bb = Features.Overlap.bollinger(data.close, 60 * 24 * 5, 2, 2)
 
 # signals = Signals.from_bands(data=data, uband=bb['uband'], mband=bb['mband'], lband=bb['lband'], middle_exit=True,
 #                              s_risk=s_risk, n_std=2, fix_talib_bug=True, max_attempts=2, show_graph=True, spread=True)

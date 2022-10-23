@@ -13,7 +13,7 @@ Migliorie & Commenti:
 """
 
 
-class Fe(object):
+class Features(object):
 
     class Overlap:
 
@@ -177,7 +177,7 @@ class Fe(object):
             if timeperiod == 1:
                 return bars_dispersion
             else:
-                return Fe.Overlap.sma(bars_dispersion, timeperiod=timeperiod)
+                return Features.Overlap.sma(bars_dispersion, timeperiod=timeperiod)
 
         @staticmethod
         def hurst_exp(s_price: pd.DataFrame, timeperiod: int) -> pd.Series:
@@ -224,8 +224,8 @@ class Fe(object):
             :param lookback, Tuple[int, int], windows for SMA. First elements will be assigned to the shorter SMA
             """
             Utils.check_min_obs(s_price, min_len=lookback[1])
-            short_ma = Fe.Overlap.sma(s_price, timeperiod=lookback[0])
-            long_ma  = Fe.Overlap.sma(s_price,timeperiod=lookback[1])
+            short_ma = Features.Overlap.sma(s_price, timeperiod=lookback[0])
+            long_ma  = Features.Overlap.sma(s_price, timeperiod=lookback[1])
             return short_ma / long_ma - 1
 
         @staticmethod
@@ -294,3 +294,28 @@ class Fe(object):
                 return output
             else:
                 return rets
+
+    class Dummy:
+
+        @staticmethod
+        def extreme_events(s: pd.Series, std_threshold: float, std_window: int, diff: bool = False) -> pd.Series:
+            """
+            Returns a dummy series {-1, 0, 1} where there was an extreme event, i.e. a price movement greater than N
+            standard deviation. It might be use as a reversal signal
+            :param s: pd.Series, prices
+            :param std_threshold: float, number of standard deviations to identify the extreme event
+            :param std_window: int, window for building the rolling standard deviation threshold
+            :param diff: bool, True to use differences for price movement, False for percentage returns.
+            :return: pd.Series with {-1: extreme-negative event; 0: no extreme event; 1: extreme-positive event}
+            """
+            s_roll_std = s.rolling(std_window).std() * std_threshold
+
+            if diff:
+                delta = s.diff()
+            else:
+                delta = s.pct_change()
+
+            return delta.\
+                mask(delta >  s_roll_std,  1).\
+                mask(delta < -s_roll_std, -1).\
+                mask((delta <= s_roll_std) & (delta >= -s_roll_std), 0)

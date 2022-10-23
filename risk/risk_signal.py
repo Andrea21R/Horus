@@ -5,7 +5,7 @@ from itertools import product
 from typing import Union, Optional, List, Tuple
 
 from fe_and_signals.utils import Utils
-from fe_and_signals.fe import Fe as Fe
+from fe_and_signals.features import Features as Fe
 
 """
 Da fare & Commenti:

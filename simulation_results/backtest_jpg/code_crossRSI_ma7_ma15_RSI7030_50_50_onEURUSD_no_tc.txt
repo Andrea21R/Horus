@@ -1,5 +1,5 @@
-rsi['SMA_RSI_8'] = Fe.sma(rsi.RSI_14, 15)
-rsi['SMA_RSI_15'] = Fe.sma(rsi.RSI_14, 15)
+rsi['SMA_RSI_8'] = Features.sma(rsi.RSI_14, 15)
+rsi['SMA_RSI_15'] = Features.sma(rsi.RSI_14, 15)
 
 
 def get_signals(rsi: pd.Series, kama1: pd.Series, kama2: pd.Series):
