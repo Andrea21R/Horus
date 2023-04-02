@@ -4,7 +4,7 @@ import talib as ta
 import hurst
 from typing import Tuple, Union, Optional
 
-from fe_and_signals import aot_module as aot
+# from aot import aot_module as aot
 from fe_and_signals.utils import Utils
 
 """
@@ -21,6 +21,7 @@ class Features(object):
         def sma(s: pd.Series, timeperiod: int) -> pd.Series:
             """
             Returns Simple Moving Average (SMA)
+
             :param s: pd.Series
             :param timeperiod: int, window
             :return: pd.Series
@@ -32,6 +33,7 @@ class Features(object):
         def ema(s: pd.Series, timeperiod: int) -> pd.Series:
             """
             Returns Exponential Moving Average (EMA)
+
             :param s: pd.Series
             :param timeperiod: int, window
             :return: pd.Series
@@ -39,43 +41,44 @@ class Features(object):
             Utils.check_min_obs(s, min_len=timeperiod)
             return ta.EMA(s, timeperiod)
 
-        @staticmethod
-        def kama(s: pd.Series, timeperiod: int, fp: int, sp: int) -> pd.Series:
-            """
-            KAMA(timeperiod (n), fastest_period (fp), slowest_period (sp))
-
-            Formula
-            -----------------------------------------------------------------
-                    KAMA(i) = KAMA(i-1) + SC * [P(i) - KAMA(i-1)]
-            -----------------------------------------------------------------
-
-            Appendix
-            -----------------------------------------------------------------
-            i)   SC = [ER * (Fast - Slow) + Slow] ** 2
-            ii)  ER = |P(i) - P(i-n+1)| / sum(|P(t)-P(t-1)|; t=1 to i)
-            iii) Fast = 2 / (FP + 1)
-            iv)  Slow = 2 / (SP + 1)
-
-            Definition
-            -----------------------------------------------------------------
-            SC: Smoothing Constants
-            ER: Efficiency Ratio
-            FP, SP: Fastest Period, Slowest Period
-            FC, SC: Fastest Coefficient, Slowest Coefficient
-            """
-            prices = s.to_numpy()
-            kama = np.zeros(prices.shape)
-            fastest = 2 / (fp + 1)
-            slowest = 2 / (sp + 1)
-
-            kama = aot.loop_kama(prices, kama, timeperiod, fastest, slowest)
-            kama = pd.Series(kama, index=s.index).replace(0, np.nan)
-            return kama
+        # @staticmethod
+        # def kama(s: pd.Series, timeperiod: int, fp: int, sp: int) -> pd.Series:
+        #     """
+        #     KAMA(timeperiod (n), fastest_period (fp), slowest_period (sp))
+        #
+        #     Formula
+        #     -----------------------------------------------------------------
+        #             KAMA(i) = KAMA(i-1) + SC * [P(i) - KAMA(i-1)]
+        #     -----------------------------------------------------------------
+        #
+        #     Appendix
+        #     -----------------------------------------------------------------
+        #     i)   SC = [ER * (Fast - Slow) + Slow] ** 2
+        #     ii)  ER = |P(i) - P(i-n+1)| / sum(|P(t)-P(t-1)|; t=1 to i)
+        #     iii) Fast = 2 / (FP + 1)
+        #     iv)  Slow = 2 / (SP + 1)
+        #
+        #     Definition
+        #     -----------------------------------------------------------------
+        #     SC: Smoothing Constants
+        #     ER: Efficiency Ratio
+        #     FP, SP: Fastest Period, Slowest Period
+        #     FC, SC: Fastest Coefficient, Slowest Coefficient
+        #     """
+        #     prices = s.to_numpy()
+        #     kama = np.zeros(prices.shape)
+        #     fastest = 2 / (fp + 1)
+        #     slowest = 2 / (sp + 1)
+        #
+        #     kama = aot.loop_kama(prices, kama, timeperiod, fastest, slowest)
+        #     kama = pd.Series(kama, index=s.index).replace(0, np.nan)
+        #     return kama
 
         @staticmethod
         def rsi(s: pd.Series, timeperiod: int) -> pd.Series:
             """
             Calc Relative Strength Index (RSI)
+
             :param s: pd.Series, closing price
             :param timeperiod: int, window
             :return: pd.Series
@@ -87,6 +90,7 @@ class Features(object):
         def bollinger(s: pd.Series, timeperiod: int, ndevup: float, ndevdown: float) -> pd.DataFrame:
             """
             Return the Bollinger Bands.
+
             :param s: pd.Series, prices
             :param timeperiod: int, window
             :param ndevup: number of std for the upper band
@@ -103,6 +107,7 @@ class Features(object):
         def vola_sma(s: pd.Series, timeperiod: int, on_rets: bool) -> pd.Series:
             """
             Returns Rolling-Volatility using Simple Moving Average (SMA)
+
             :param s: pd.Series, prices
             :param timeperiod: int, window
             :param on_rets: bool, True if you want to calc vola on returns, otherwise on the prices
@@ -119,6 +124,7 @@ class Features(object):
         def vola_ema(s: pd.Series, timeperiod: int, on_rets: bool) -> pd.Series:
             """
             Returns Rolling-Volatility using Exponential Moving Average (EMA)
+
             :param s: pd.Series, prices
             :param timeperiod: int, window
             :param on_rets: bool, True if you want to calc vola on returns, otherwise on the prices
@@ -145,6 +151,7 @@ class Features(object):
         def atr(data: pd.DataFrame, timeperiod: int) -> pd.Series:
             """
             Returns the Average-True-Range (ATR)
+
             :param data: pd.DataFrame, with at least columns: ['high', 'low', 'close']
             :param timeperiod: int, window
             :return: pd.Series
@@ -156,8 +163,9 @@ class Features(object):
         def bars_dispersion(data: pd.DataFrame) -> pd.Series:
             """
             It returns the dispersion of the bars. It's computed as follow:
-                (HIGH - LOW) / LOW
+                - (HIGH - LOW) / LOW
             Thus, it's bounded between 0 and 1 --> [0, 1]
+
             :param data: pd.DataFrame, with at least the columns: ['high', 'low']
             :return: pd.Series
             """
@@ -167,8 +175,9 @@ class Features(object):
         def bars_dispersion_rolling(cls, data: pd.DataFrame, timeperiod: int) -> pd.Series:
             """
             Returns SMA of the dispersion of the bars. See FeaturesEngineering.bars_dispersion func's docs for more details.
+
             :param data: pd.DataFrame, with at least the columns: ['high', 'low']
-            :timeperiod: int, window for SMA
+            :param timeperiod: int, window for SMA
             :return: pd.Series
             """
             Utils.check_min_obs(data, min_len=timeperiod)
@@ -186,10 +195,11 @@ class Features(object):
             anti-persistent one (i.e. mean-reverting period). For further references see:
                 - https://towardsdatascience.com/introduction-to-the-hurst-exponent-with-code-in-python-4da0414ca52e
                 - https://en.wikipedia.org/wiki/Hurst_exponent
+
             For computing Hurst Exponent exist several formulas. This function use the R/S procedure.
-            ----------------------------------------------------------------------------------------------------------------
+
             WARNING.1: Due to a constraint from the formula, minimum obs required are 100
-            ----------------------------------------------------------------------------------------------------------------
+
             :param s_price: pd.Series, closing_price
             :param timeperiod: int, window
             :return: pd.Series
@@ -212,16 +222,16 @@ class Features(object):
         def cross_sma_perc_distance(s_price: pd.Series, lookback: Tuple[int, int]) -> float:
             """
             Returns the percentage distance between a shorter SMA and a longest one, computed on the closing prices.
-            ----------------------------------------------------------------------------------------------------------------
             It's computed as follow:
                     Shorter_SMA / Longer_SMA - 1
-            ----------------------------------------------------------------------------------------------------------------
+
             It should be useful to feed some ML models. It's a market features that trying to suggest if we're in a bullish
             market (shorter > longer) or into a bear market (longer < shorter), and the magnitude of the trend (this is the
             reason why it returns a distance percentage, instead of a simple dummy {1: bullish; 0: bearish).
-            ----------------------------------------------------------------------------------------------------------------
-            :param data, pd.DataFrame, with at least closing prices (columns named 'close')
-            :param lookback, Tuple[int, int], windows for SMA. First elements will be assigned to the shorter SMA
+
+            :param data:, pd.DataFrame, with at least closing prices (columns named 'close')
+            :param lookback:, Tuple[int, int], windows for SMA. First elements will be assigned to the shorter SMA
+            :return: float
             """
             Utils.check_min_obs(s_price, min_len=lookback[1])
             short_ma = Features.Overlap.sma(s_price, timeperiod=lookback[0])
@@ -232,6 +242,7 @@ class Features(object):
         def roc(s: pd.Series, timeperiod: int) -> pd.Series:
             """
             Calc Return Of Change (ROC)
+
             :param s: pd.Series, closing price
             :param timeperiod: int, window
             :return: pd.Series
@@ -243,6 +254,7 @@ class Features(object):
         def adx(data: pd.DataFrame, timeperiod: int) -> pd.Series:
             """
             Return the Average-Directional-Index (ADX)
+
             :param data: pd.DataFrame, with at least columns ['high', 'low', 'close']
             :param timeperiod: int
             :return: pd.Series
@@ -253,6 +265,7 @@ class Features(object):
         def plus_di(data: pd.DataFrame, timeperiod: int) -> pd.Series:
             """
             Return the +DI
+
             :param data: pd.dataFrame, with at least columns ['high', 'low', 'close']
             :param timeperiod: int
             :return: pd.Series
@@ -263,6 +276,7 @@ class Features(object):
         def minus_di(data: pd.DataFrame, timeperiod: int) -> pd.Series:
             """
             Return the -DI
+
             :param data: pd.dataFrame, with at least columns ['high', 'low', 'close']
             :param timeperiod: int
             :return: pd.Series
@@ -275,6 +289,7 @@ class Features(object):
         def returns(s: pd.Series, lags: Optional[Union[int, list]] = None) -> Union[pd.Series, pd.DataFrame]:
             """
             It calc price returns with no lag and with them, depending on the parameter lags
+
             :param s: pd.Series, prices
             :param lags: Optional[Union[int, list]], type:int if you want all the lags between 0 and lags. type: list
                                                      if you want to specify the lags period.
@@ -302,6 +317,7 @@ class Features(object):
             """
             Returns a dummy series {-1, 0, 1} where there was an extreme event, i.e. a price movement greater than N
             standard deviation. It might be use as a reversal signal
+
             :param s: pd.Series, prices
             :param std_threshold: float, number of standard deviations to identify the extreme event
             :param std_window: int, window for building the rolling standard deviation threshold

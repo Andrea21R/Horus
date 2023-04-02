@@ -110,6 +110,7 @@ class Signals:
     ) -> pd.Series:
         """
         Returns signals from RSI indicator
+
         :param data: pd.DataFrame, with OHLC and spread(%) (or bidask). spread to True to use spread(%)
         :param rsi: pd.Series
         :param open_cv: Tuple[float, float], 1° element: upper_threshold; 2°: lower_threshold
@@ -231,6 +232,7 @@ class Signals:
     ) -> pd.Series:
         """
         Return signals {1: long, 0: neutral, -1: short} from bands indicators (bollinger, ...).
+
         :param data: pd.DataFrame, with at least the column 'close',
         :param uband: pd.Series, upper-band
         :param mband: pd.Series, middle-band

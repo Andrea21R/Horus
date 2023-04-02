@@ -1,5 +1,5 @@
 FEATURES:
-    - extreme event (std events) dummy
+    DONE extreme event (std events) dummy
     - studiare tutte le varie features di talib
     DONE... di+, di-, adx (mi sa che lo fa talib)
     DONE... creare un autofe per generare dei settings pre-stabiliti di features (paralleling)?
@@ -22,7 +22,7 @@ SIGNALS:
     - mixer
 
 RISKS:
-    - trades performance evaluation (gain/loss, accuracy, etc.)
+    - trades performance evaluation (gain/loss, accuracy, etc.), usare pyfolio?
 
 MODELS:
     - terminare revisione di Logit
@@ -45,6 +45,8 @@ BUGS:
     - initial value in KAMA (for convergence)
 
 CODE:
+    - sistemare storia numba in aot
     - signals in aot
     - rifare Talib
-    - fare Docs con Sphinx
+    DONE... fare Docs con Sphinx
+    - rifinire Docs

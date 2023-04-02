@@ -9,7 +9,7 @@ class FeGenerator:
     def get_fe_by_config(data: pd.DataFrame, fe_pars: dict, verbose: bool = False) -> pd.DataFrame:
         """
         Returns a DataFrame of features (n_sample, n_features), according to the fe_pars (type:dict), i.e. a config.
-        ----------------------------------------------------------------------------------------------------------------
+
         :param data: pd.DataFrame, with at least the columns needed for features computation
         :param fe_pars: dict,
         :param verbose: bool, True if you want to print the current calculation in console
@@ -54,7 +54,7 @@ class FeGenerator:
         """
         Returns a DataFrame of features, built following the configuration from fe_pars and the output will have the
         target dates on the row. Useful for logit for trade
-        ----------------------------------------------------------------------------------------------------------------
+
         :param data: pd.DataFrame, with at least the columns needed for features computation
         :param fe_pars: dict
         :param target_dates: list
@@ -76,9 +76,9 @@ class FeGenerator:
 if __name__ == "__main__":
 
     import datetime as dt
-    from fe_and_signals.fe_config import fe_config_for_trades_logit
+    from constants.fe_config.logit_for_trades import fe_pars
 
-    files_path =  os.path.dirname(os.getcwd()) + "/test_data/"
+    files_path =  os.path.dirname(os.getcwd()) + "/tests/test_data/"
     trade_hist_file_name = "bb_trades_history_EURUSD.pkl"
     trade_hist = pd.read_pickle(files_path + trade_hist_file_name)
     data_file_name = "EURUSD2022.parquet"
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     mkt_fe = FeGenerator.get_fe_by_config_for_target_dates(
         target_dates=trade_hist['start'],
         data=data,
-        fe_pars=fe_config_for_trades_logit,
+        fe_pars=fe_pars,
         verbose=True
     )
     date_str = str(dt.datetime.now())[:16].replace(":", "").replace("-", "").replace(" ", "_")

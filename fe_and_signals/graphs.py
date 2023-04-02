@@ -21,6 +21,7 @@ class Graphs:
         """
         Returns an instance of Axes with a Graph containing the Price Action and the buy/sell actions (highlighted by
         a scatter's markers)
+
         :param s_signals: pd.Series, with signals {-1, 0, 1}
         :param continuous_signals: bool, True for continuos signals (like Trend-Following), False otherwise (like RSI)
         :param s_close: pd.Series, closing price
@@ -70,6 +71,7 @@ class Graphs:
     ) -> plt.Axes:
         """
         Returns a Graph showing the indicator path and the thresholds
+
         :param indicator: pd.Series, like RSI
         :param open_cv: Tuple[float, float], Critical Values (i.e. thresholds) for open trades
         :param close_cv: Tuple[float, float], Critical Values (i.e. thresholds) for close trades
@@ -105,6 +107,7 @@ class Graphs:
     ) -> plt.Axes:
         """
         Returns a Graph with the Cumulative PNL (Gross and/or Net) from a signals
+
         :param data: pd.DataFrame, with OHLC and spread%
         :param s_signals: pd.Series, with signals {-1, 0, 1}
         :param spread: bool, True to compute net_pnl using spread(%)

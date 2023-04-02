@@ -10,6 +10,7 @@ class Utils:
     def check_len(*args: Union[pd.Series, pd.DataFrame]) -> NoReturn:
         """
         Checks if the length of all the elements is equal
+
         :param args: Union[pd.Series, pd.DataFrame]
         :return: None or Exception
         """
@@ -21,6 +22,7 @@ class Utils:
     def check_min_obs(*args: Union[pd.Series, pd.DataFrame], min_len: int) -> NoReturn:
         """
         Checks if all the elements in args have at least N elements
+
         :param args: Union[pd.Series, pd.DataFrame]
         :return: None or Exception
         """
@@ -32,6 +34,7 @@ class Utils:
     def from_series_to_numpy(*args: pd.Series) -> Union[List[np.array], np.array]:
         """
         Transform pd.Series to np.array
+
         :param args: pd.Series
         :return: np.array if it was passed only one pd.Series, List[np.array] otherwise
         """
@@ -47,6 +50,7 @@ class Utils:
     def from_signals_to_tp(signals: pd.Series, continuos: bool) -> pd.DataFrame:
         """
         Returns turning points of a signals strategy
+
         :param signals: pd.Series, with signals {-1, 0, 1}
         :param continuos: bool, True for Trend-Following, False for others (eg RSI reversal that it doesn't trade always)
         :return: pd.DataFrame

@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
-import ray
 from itertools import product
 from typing import Union, Optional, List, Tuple
 
 from fe_and_signals.utils import Utils
-from fe_and_signals.features import Features as Fe
 
 """
 Da fare & Commenti:
@@ -65,6 +63,7 @@ class RiskSignal:
     def get_cumulative_pnl(s_pnl: pd.Series, comp: bool) -> pd.Series:
         """
         Returns Cumulative pnl from point-in-time pnl.
+
         :param s_pnl: pd.Series
         :param comp: bool, True for compounding, False for simple.
         :return: pd.Series
@@ -78,6 +77,7 @@ class RiskSignal:
     def __get_start_end_trades(s_signals: pd.Series) -> Tuple[list, list]:
         """
         Returns a List of (start, end) date for the trades made.
+
         :param s_signals: pd.Series, with signals {-1, 0, 1} LAGGED-1, because the signal in t will use in t + 1
         :return: List[list]
         """
@@ -139,6 +139,7 @@ class RiskSignal:
             - gross_pnl: pnl excluding transaction costs
             - net_pnl: pnl including transaction costs
             - tc: transaction costs
+
         :param s_signals: pd.Series, with signals {-1, 0, 1}
         :param data: pd.Series, with OHLC and spread% or bidask prices
         :param real_start_end: bool, True if you want the real start/end (i.e. signal in t is executed in t+1). False

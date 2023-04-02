@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../DQN_for_trading/.idea/DQN_for_trading.iml" filepath="$PROJECT_DIR$/../DQN_for_trading/.idea/DQN_for_trading.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Horus.iml" filepath="$PROJECT_DIR$/.idea/Horus.iml" />
     </modules>
   </component>

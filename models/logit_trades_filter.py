@@ -236,7 +236,7 @@ if __name__ == "__main__":
     import warnings
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
-    path = os.path.dirname(os.getcwd()) + "/test_data/"
+    path = os.path.dirname(os.getcwd()) + "/tests/test_data/"
 
     trade_hist = pd.read_pickle(path + "rsi_trades_history_EURUSD.pkl")
     mkt_fe = pd.read_parquet(path + "mkt_fe_for_logit_EURUSD.parquet")
