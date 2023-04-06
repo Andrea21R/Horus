@@ -1,9 +1,9 @@
 constants/fe_config/__pycache__/logit_for_trades.cpython-38.pyc
 constants/fe_config/__pycache__/__init__.cpython-38.pyc
-fe_and_signals/__pycache__/signals.cpython-38.pyc
-fe_and_signals/__pycache__/fe_generator.cpython-38.pyc
-fe_and_signals/__pycache__/fe.cpython-38.pyc
-fe_and_signals/__pycache__/__init__.cpython-38.pyc
+Andrea/fe_and_signals/__pycache__/signals.cpython-38.pyc
+Andrea/fe_and_signals/__pycache__/fe_generator.cpython-38.pyc
+Andrea/fe_and_signals/__pycache__/fe.cpython-38.pyc
+Andrea/fe_and_signals/__pycache__/__init__.cpython-38.pyc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -76,7 +76,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+Andrea/docs/_build/
 
 # PyBuilder
 target/
@@ -138,4 +138,13 @@ dmypy.json
 .idea
 visualization/test.py
 
-/env/
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+.idea
